@@ -1,56 +1,57 @@
-pipeline{
-    
+pipeline {
     agent any 
-    
+    tools {
+        tool name: 'maven', type: 'maven'
+    }
     stages {
         
-        stage('Git Checkout'){
+        stage ('Git Checkout') {
             
-            steps{
+            steps {
                 
-                script{
+                script {
                     
                     git branch: 'main', url: 'https://github.com/marcosnasp/demo-counter-app.git'
                 }
             }
         }
-        stage('UNIT testing'){
+        stage ('UNIT testing') {
             
-            steps{
+            steps {
                 
-                script{
+                script {
                     
                     sh 'mvnw test'
                 }
             }
         }
-        stage('Integration testing'){
+        stage ('Integration testing') {
             
-            steps{
+            steps {
                 
-                script{
+                script {
                     
                     sh 'mvnw verify -DskipUnitTests'
                 }
             }
         }
-        stage('Maven build'){
+        stage ('Maven build') {
             
-            steps{
+            steps {
                 
-                script{
+                script {
                     
                     sh 'mvnw clean install'
                 }
             }
         }
-        stage('Static code analysis'){
+        stage ('Static code analysis') {
             
-            steps{
+            steps {
                 
-                script{
+                script {
                     
-                    withSonarQubeEnv(credentialsId: 'sonar-api') {
+                    withSonarQubeEnv (credentialsId: 'sonar-api') {
                         
                         sh 'mvnw clean package sonar:sonar'
                     }
@@ -58,11 +59,11 @@ pipeline{
                     
                 }
             }
-            stage('Quality Gate Status'){
+            stage ('Quality Gate Status') {
                 
-                steps{
+                steps {
                     
-                    script{
+                    script {
                         
                         waitForQualityGate abortPipeline: false, credentialsId: 'sonar-api'
                     }
