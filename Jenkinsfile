@@ -1,6 +1,8 @@
 pipeline {
     agent any 
-    tool name: 'maven', type: 'maven'
+    tools {
+        tool name: 'maven', type: 'maven'
+    }
     stages {
         stage ('Git Checkout') {
           steps {
